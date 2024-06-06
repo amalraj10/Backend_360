@@ -5,10 +5,15 @@ const express = require('express')
 const router = new express.Router()
 
 //import controller
-const userController = require('../Controllers/userController')
+const siteController = require('../Controllers/siteController')
+// Import userController
+const userController = require('../Controllers/userController');
+
+router.get('/sites/list_sites',siteController.getSites)
 
 
-router.post('/users/add_sites',userController.addSites)
+// Use userController routes
+router.use('/users', userController);
 
 
 //4.export router
