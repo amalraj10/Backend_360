@@ -1,24 +1,24 @@
-// server.js
 const express = require('express');
 const help360 = express();
 const port = process.env.PORT || 7000;
 
-//3.import cors
-const cors = require('cors')
+// 3. Import cors
+const cors = require('cors');
 
-//import router
-const router = require('./Routes/router')
-
-//5.use of cors in server
-help360.use(cors())
-
-//use of router
-help360.use(router)
+// 5. Use cors middleware
+help360.use(cors());
 
 // Body parser middleware
+// Parse JSON bodies
 help360.use(express.json());
+// Parse URL-encoded bodies
 help360.use(express.urlencoded({ extended: true }));
 
+// Import router
+const router = require('./Routes/router');
+
+// Use router
+help360.use(router);
 
 // Start the server
 help360.listen(port, () => {

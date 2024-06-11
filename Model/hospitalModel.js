@@ -1,0 +1,1 @@
+// hosp_id int prkey, hosp_name varchar,site_id int, image, 

@@ -1,32 +1,24 @@
-// Import required modules
-const { Router } = require('express');
+const client = require('./dbConnect');
+const jwt = require('jsonwebtoken');
 
-// In-memory user database
-const users = [
-  { id: 1, username: 'user1', password: 'password1' },
-  { id: 2, username: 'user2', password: 'password2' },
-  // Add more users as needed
-];
-
-// Create a new router instance
-const router = Router();
-
-// Login route
-router.post('/login', (req, res) => {
-    console.log(req)
-  const { username, password } = req.body;
-
-  // Find user by username
-  const user = users.find(user => user.username === username);
-
-  // If user not found or password is incorrect, return error
-  if (!user || user.password !== password) {
-    return res.status(401).json({ success: false, message: 'Invalid username or password' });
-  }
-
-  // If username and password are correct, return success
-  res.status(200).json({ success: true, message: 'Login successful', user: { id: user.id, username: user.username } });
-});
-
-// Export the router
-module.exports = router;
+exports.Adminlogin = async (req, res) => {
+    const { user_name, password ,site_id} = req.body;
+    try {
+        const query = 'SELECT * FROM users WHERE user_name = $1 AND password = $2 AND site_id = $3';
+        const values = [user_name, password,site_id];
+        const { rows } = await client.query(query, values);
+        console.log(rows);
+        if (rows.length > 0) {
+            const existingAdmin = rows[0];
+            const token = jwt.sign({ userId: existingAdmin.user_id }, "superkey2255");
+            const query = 'UPDATE  users SET token = $4 WHERE  user_name = $1 AND password = $2 AND site_id = $3';
+            const values = [user_name, password,site_id,token];
+            const { results } = await client.query(query, values);
+            res.status(200).json({ existingAdmin, token });
+        } else {
+            res.status(404).json('Invalid email or password');
+        }
+    } catch (err) {
+        res.status(401).json(`Login request failed due to ${err}`);
+    }
+};

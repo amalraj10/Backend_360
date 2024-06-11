@@ -12,9 +12,10 @@ const userController = require('../Controllers/userController');
 router.get('/sites/list_sites',siteController.getSites)
 
 
-// Use userController routes
-router.use('/users', userController);
+router.post ('/admin/login',userController.Adminlogin)
 
 
 //4.export router
 module.exports = router
+
+
