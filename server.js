@@ -20,6 +20,8 @@ const router = require('./Routes/router');
 // Use router
 help360.use(router);
 
+help360.use('/uploads',express.static('./uploads'))
+
 // Start the server
 help360.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
